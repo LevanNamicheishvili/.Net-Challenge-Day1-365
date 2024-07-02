@@ -1,0 +1,14 @@
+C:\Users\levan\source\repos\StudentManagement\bin\Debug\net8.0\StudentManagement.exe
+C:\Users\levan\source\repos\StudentManagement\bin\Debug\net8.0\StudentManagement.deps.json
+C:\Users\levan\source\repos\StudentManagement\bin\Debug\net8.0\StudentManagement.runtimeconfig.json
+C:\Users\levan\source\repos\StudentManagement\bin\Debug\net8.0\StudentManagement.dll
+C:\Users\levan\source\repos\StudentManagement\bin\Debug\net8.0\StudentManagement.pdb
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.AssemblyInfoInputs.cache
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.AssemblyInfo.cs
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.csproj.CoreCompileInputs.cache
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.dll
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\refint\StudentManagement.dll
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.pdb
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\StudentManagement.genruntimeconfig.cache
+C:\Users\levan\source\repos\StudentManagement\obj\Debug\net8.0\ref\StudentManagement.dll

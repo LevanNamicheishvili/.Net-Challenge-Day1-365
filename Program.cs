@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Principal;
 
 namespace StudentManagementSystem
 {
@@ -63,10 +64,14 @@ namespace StudentManagementSystem
             {
                 Console.WriteLine("1. Register");
                 Console.WriteLine("2. Login");
-                Console.WriteLine("3. User Profile");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("3. Exit");
                 Console.Write("Enter your choice: ");
-                int choice = Convert.ToInt32(Console.ReadLine());
+
+                if (!int.TryParse(Console.ReadLine(), out int choice))
+                {
+                    Console.WriteLine("Invalid choice. Please enter a number.");
+                    continue;
+                }
 
                 switch (choice)
                 {
@@ -76,10 +81,8 @@ namespace StudentManagementSystem
                     case 2:
                         LoginUser();
                         break;
+               
                     case 3:
-                        UserProfile();
-                        break;
-                    case 4:
                         Exit();
                         break;
                     default:
@@ -87,6 +90,12 @@ namespace StudentManagementSystem
                         break;
                 }
             }
+        }
+
+        public static void Clear()
+        {
+            Thread.Sleep(1000);
+            Console.Clear();
         }
 
         private static void RegisterUser()
@@ -102,17 +111,15 @@ namespace StudentManagementSystem
             Console.Write("Enter your username: ");
             register.Username = Console.ReadLine();
 
-            bool isCorrectMail = false;
-
-            while (!isCorrectMail)
+            while (true)
             {
                 Console.Write("Enter your email: ");
                 register.Email = Console.ReadLine();
 
-                if (register.Email.Contains("@") && register.Email.Contains(".com"))
+                if (IsValidEmail(register.Email))
                 {
                     Console.WriteLine("Email is valid");
-                    isCorrectMail = true;
+                    break;
                 }
                 else
                 {
@@ -120,24 +127,24 @@ namespace StudentManagementSystem
                 }
             }
 
-            bool isCorrectPass = false;
-            while (!isCorrectPass)
+            while (true)
             {
                 Console.Write("Enter your password: ");
                 register.Password = Console.ReadLine();
 
-                if (register.Password.Length < 8)
+                if (register.Password.Length >= 8)
                 {
-                    Console.WriteLine("Password must contain at least 8 characters");
+                    break;
                 }
                 else
                 {
-                    isCorrectPass = true;
+                    Console.WriteLine("Password must contain at least 8 characters");
                 }
             }
 
             registeredUser = register;
             Console.WriteLine("Registration successful");
+            Clear();
             isRegistered = true;
         }
 
@@ -146,6 +153,7 @@ namespace StudentManagementSystem
             if (!isRegistered)
             {
                 Console.WriteLine("No registered user. Please register first.");
+                Clear();
                 return;
             }
 
@@ -154,82 +162,109 @@ namespace StudentManagementSystem
             Console.Write("Enter your password: ");
             string password = Console.ReadLine();
 
-            if (registeredUser.Username == username && registeredUser.Password == password)
+            if (registeredUser.Username.Equals(username, StringComparison.OrdinalIgnoreCase) &&
+                registeredUser.Password == password)
             {
                 Console.WriteLine("Login successful");
+                Clear();
+                while (true)
+                {
+                    
+                    Console.WriteLine("Welcome To User Profile");
+
+                    Console.WriteLine("1. View Profile");
+                    Console.WriteLine("2. Update Profile");
+                    Console.WriteLine("3. Delete Profile");
+                    Console.WriteLine("4. Exit");
+                    Console.Write("Enter your choice: ");
+
+                    if (!int.TryParse(Console.ReadLine(), out int choice))
+                    {
+                        Console.WriteLine("Invalid choice. Please enter a number.");
+                        continue;
+                    }
+
+                    switch (choice)
+                    {
+                        case 1:
+                            Clear();
+                            ViewProfile();
+                            break;
+                        case 2:
+                            UpdateProfile();
+                            break;
+                        case 3:
+                            DeleteProfile();
+                            return;
+                        case 4:
+                            Clear();
+                            return;
+                        default:
+                            Console.WriteLine("Invalid choice");
+                            break;
+                    }
+                
+                }
             }
             else
             {
-                Console.WriteLine("Login failed");
+                Console.WriteLine("Login failed, try again !");
+                Clear();
             }
         }
 
-        private static void UserProfile()
-        {
-            if (!isRegistered)
-            {
-                Console.WriteLine("No registered user. Please register first.");
-                return;
-            }
-
-            Console.WriteLine("Welcome To User Profile");
-            Console.WriteLine("1. View Profile");
-            Console.WriteLine("2. Update Profile");
-            Console.WriteLine("3. Delete Profile");
-            Console.WriteLine("4. Exit");
-            Console.Write("Enter your choice: ");
-
-            int choice = Convert.ToInt32(Console.ReadLine());
-
-            switch (choice)
-            {
-                case 1:
-                    ViewProfile();
-                    break;
-                case 2:
-                    UpdateProfile();
-                    break;
-                case 3:
-                    DeleteProfile();
-                    break;
-                case 4:
-                    Exit();
-                    break;
-                default:
-                    Console.WriteLine("Invalid choice");
-                    break;
-            }
-        }
 
         private static void ViewProfile()
         {
-            Console.WriteLine("User Profile");
-            Console.WriteLine("First Name: " + registeredUser.FirstName);
-            Console.WriteLine("Last Name: " + registeredUser.LastName);
-            Console.WriteLine("Username: " + registeredUser.Username);
-            Console.WriteLine("Email: " + registeredUser.Email);
+            int columnWidth = Math.Max("First Name".Length, registeredUser.FirstName.Length);
+            columnWidth = Math.Max(columnWidth, "Last Name".Length);
+            columnWidth = Math.Max(columnWidth, registeredUser.LastName.Length);
+            columnWidth = Math.Max(columnWidth, "Username".Length);
+            columnWidth = Math.Max(columnWidth, registeredUser.Username.Length);
+            columnWidth = Math.Max(columnWidth, "Email".Length);
+            columnWidth = Math.Max(columnWidth, registeredUser.Email.Length);
+            columnWidth += 2; 
+
+       
+            Console.WriteLine(new string('-', columnWidth * 2 + 3));
+            Console.WriteLine("| {0,-" + columnWidth + "} | {1,-" + columnWidth + "} |", "Property", "Value");
+            Console.WriteLine(new string('-', columnWidth * 2 + 3));
+
+            Console.WriteLine("| {0,-" + columnWidth + "} | {1,-" + columnWidth + "} |", "First Name", registeredUser.FirstName);
+            Console.WriteLine("| {0,-" + columnWidth + "} | {1,-" + columnWidth + "} |", "Last Name", registeredUser.LastName);
+            Console.WriteLine("| {0,-" + columnWidth + "} | {1,-" + columnWidth + "} |", "Username", registeredUser.Username);
+            Console.WriteLine("| {0,-" + columnWidth + "} | {1,-" + columnWidth + "} |", "Email", registeredUser.Email);
+
+            Console.WriteLine(new string('-', columnWidth * 2 + 3));
         }
+
+
 
         private static void UpdateProfile()
         {
             Console.WriteLine("Update Profile");
-            Console.Write("Enter your first name: ");
-            registeredUser.FirstName = Console.ReadLine();
-            Console.Write("Enter your last name: ");
-            registeredUser.LastName = Console.ReadLine();
-            Console.Write("Enter your username: ");
-            registeredUser.Username = Console.ReadLine();
 
-            bool isCorrectMail = false;
-            while (!isCorrectMail)
+            Register tempRegister = new Register();
+            tempRegister.Id = registeredUser.Id;
+
+            Console.Write("Enter your first name: ");
+            tempRegister.FirstName = Console.ReadLine();
+
+            Console.Write("Enter your last name: ");
+            tempRegister.LastName = Console.ReadLine();
+
+            Console.Write("Enter your username: ");
+            tempRegister.Username = Console.ReadLine();
+
+            while (true)
             {
                 Console.Write("Enter your email: ");
-                registeredUser.Email = Console.ReadLine();
+                tempRegister.Email = Console.ReadLine();
 
-                if (registeredUser.Email.Contains("@") && registeredUser.Email.Contains(".com"))
+                if (IsValidEmail(tempRegister.Email))
                 {
                     Console.WriteLine("Email is valid");
-                    isCorrectMail = true;
+                    break;
                 }
                 else
                 {
@@ -237,36 +272,57 @@ namespace StudentManagementSystem
                 }
             }
 
-            bool isCorrectPass = false;
-            while (!isCorrectPass)
+            while (true)
             {
                 Console.Write("Enter your password: ");
-                registeredUser.Password = Console.ReadLine();
+                tempRegister.Password = Console.ReadLine();
 
-                if (registeredUser.Password.Length < 8)
+                if (tempRegister.Password.Length >= 8)
                 {
-                    Console.WriteLine("Password must contain at least 8 characters");
+                    break;
                 }
                 else
                 {
-                    isCorrectPass = true;
+                    Console.WriteLine("Password must contain at least 8 characters");
                 }
             }
 
+            registeredUser = tempRegister;
             Console.WriteLine("Profile updated successfully");
         }
+
+
 
         private static void DeleteProfile()
         {
             registeredUser = new Register();
             isRegistered = false;
             Console.WriteLine("Profile deleted successfully");
+            
+            Clear();
+
         }
 
         private static void Exit()
         {
             Console.WriteLine("Exiting the program.");
             Environment.Exit(0);
+
+        }
+
+        
+
+        private static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
